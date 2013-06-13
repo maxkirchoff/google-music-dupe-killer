@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+from gmusicapi import Webclient
+
+def map_track_duplication(tracks):
+    album_track_duplicate_map = {}
+    for track in tracks:
+        if track['album'] not in album_track_duplicate_map:
+            album_track_duplicate_map.update({track['album']: {}})
+        if track['title'] in album_track_duplicate_map[track['album']]:
+            album_track_duplicate_map[track['album']][track['title']] += 1
+        else:
+            album_track_duplicate_map[track['album']][track['title']] = 1
+    return album_track_duplicate_map
+
+
+def sort_tracks_by_album(tracks):
+    tracks_by_album = {}
+    for track in tracks:
+        if track['album'] not in tracks_by_album:
+            tracks_by_album[track['album']] = []
+        tracks_by_album[track['album']].append(track)
+    return tracks_by_album
+
+
+def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
+    duplicate_tracks = []
+    for album_title in album_track_duplicate_map:
+        for track_title in album_track_duplicate_map[album_title]:
+            duplicates = album_track_duplicate_map[album_title][track_title] - 1
+            for album in all_tracks_by_album:
+                if album_title is album:
+                    for track in all_tracks_by_album[album]:
+                        if track['title'] is track_title and duplicates > 0:
+                            duplicate_tracks.append(track)
+                            print "Queueing for removal: " + track['title'] + " from album " + track['album'] + "by " + track['artist']
+                            all_tracks.remove(track)
+                            duplicates += -1
+    return duplicate_tracks
+
+
+def get_track_ids(tracks):
+    track_ids = []
+    for track in tracks:
+        track_ids.append(track['id'])
+    return track_ids
+
+
+api = Webclient()
+logged_in = api.login('username', 'password')
+
+if logged_in:
+    print "Successfully logged in. Beginning duplication removal process."
+    all_tracks = api.get_all_songs()
+    album_track_duplicate_map = map_track_duplication(all_tracks)
+    all_tracks_by_album = sort_tracks_by_album(all_tracks)
+    duplicate_tracks = get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map)
+    duplicate_track_ids = get_track_ids(duplicate_tracks)
+    if len(duplicate_track_ids) > 0:
+        deleted_track_ids = api.delete_songs(duplicate_track_ids)
+        print "Successfully deleted " + str(len(deleted_track_ids)) + " of " + str(len(duplicate_track_ids)) + " queued songs for removal."
+    else:
+        print "I didn't find any duplicate tracks."
+    print "Thank you!"
