@@ -4,21 +4,21 @@ from gmusicapi import Webclient
 def map_track_duplication(tracks):
     album_track_duplicate_map = {}
     for track in tracks:
-        if track['album'] not in album_track_duplicate_map:
-            album_track_duplicate_map.update({track['album']: {}})
-        if track['title'] in album_track_duplicate_map[track['album']]:
-            album_track_duplicate_map[track['album']][track['title']] += 1
+        if track['albumNorm'] not in album_track_duplicate_map:
+            album_track_duplicate_map.update({track['albumNorm']: {}})
+        if track['titleNorm'] in album_track_duplicate_map[track['albumNorm']]:
+            album_track_duplicate_map[track['albumNorm']][track['titleNorm']] += 1
         else:
-            album_track_duplicate_map[track['album']][track['title']] = 1
+            album_track_duplicate_map[track['albumNorm']][track['titleNorm']] = 1
     return album_track_duplicate_map
 
 
 def sort_tracks_by_album(tracks):
     tracks_by_album = {}
     for track in tracks:
-        if track['album'] not in tracks_by_album:
-            tracks_by_album[track['album']] = []
-        tracks_by_album[track['album']].append(track)
+        if track['albumNorm'] not in tracks_by_album:
+            tracks_by_album[track['albumNorm']] = []
+        tracks_by_album[track['albumNorm']].append(track)
     return tracks_by_album
 
 
@@ -30,9 +30,9 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
             for album in all_tracks_by_album:
                 if album_title is album:
                     for track in all_tracks_by_album[album]:
-                        if track['title'] is track_title and duplicates > 0:
+                        if track['titleNorm'] is track_title and duplicates > 0:
                             duplicate_tracks.append(track)
-                            print "Queueing for removal: " + track['title'] + " from album " + track['album'] + "by " + track['artist']
+                            print "Queueing for removal: " + track['titleNorm'] + " from album " + track['albumNorm'] + "by " + track['artist']
                             all_tracks.remove(track)
                             duplicates += -1
     return duplicate_tracks
