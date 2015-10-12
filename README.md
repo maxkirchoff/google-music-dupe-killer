@@ -17,7 +17,7 @@ This is a incredibly simple script, but does require a few small configurations.
 * If you do not have pip or are running windows, please see [Unofficial Google Music API usage](http://unofficial-google-music-api.readthedocs.org/en/latest/usage.html)
 
 ### Change login credentials
-* Near line 49, change the 'username' and 'password' to your Google account credentials.
+* Near line 89, change the 'username' and 'password' to your Google account credentials.
 
 ### Run kill_dupes
 * The script will automatically detect and remove duplicates on any songs in your library.
