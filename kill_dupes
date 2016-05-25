@@ -97,7 +97,9 @@ if logged_in:
     duplicate_track_ids = get_track_ids(duplicate_tracks)
     if len(duplicate_track_ids) > 0:
         if query_yes_no("Found " + str(len(duplicate_track_ids)) + " duplicate tracks. Delete duplicates?", "no"):
-            deleted_track_ids = api.delete_songs(duplicate_track_ids)
+            deleted_track_ids = []
+            for track in duplicate_track_ids:
+                deleted_track_ids += api.delete_songs(track)
             print "Successfully deleted " + str(len(deleted_track_ids)) + " of " + str(len(duplicate_track_ids)) + " queued songs for removal."
     else:
         print "I didn't find any duplicate tracks."
