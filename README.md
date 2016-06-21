@@ -18,9 +18,9 @@ This is a incredibly simple script, but does require a few small configurations.
 
 ### Change login credentials
 * Near line 89, change the 'username' and 'password' to your Google account credentials.
-* NOTE: Users with 2-step authentication enabled will heve to create an App Spceific Key/Password.
-Login into your Google account and head up to https://security.google.com/settings/security/apppasswords, there you will be able to manually generate an App Specific password.
-After creating the Key/Password, just use it to login together with your usual Google username/email.
+* NOTE: Users with 2-step authentication enabled will have to create an App Specific Key/Password.
+Login into your Google account and head to https://security.google.com/settings/security/apppasswords, there you will be able to manually generate an App Specific password.
+After creating the Key/Password, just use it to login into this App, together with your usual Google username/email.
 
 ### Run kill_dupes
 * The script will automatically detect and remove duplicates on any songs in your library.
