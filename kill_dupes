@@ -99,7 +99,7 @@ def get_track_ids(tracks):
 
 
 api = Mobileclient()
-logged_in = api.login('benjaminsproule@gmail.com', 'jjtibuwdejujrmfm', Mobileclient.FROM_MAC_ADDRESS)
+logged_in = api.login('username', 'password', Mobileclient.FROM_MAC_ADDRESS)
 
 if logged_in:
     print("Successfully logged in. Beginning duplicate detection process.")
