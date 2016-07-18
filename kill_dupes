@@ -1,17 +1,26 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+import sys
+
 from gmusicapi import Mobileclient
+
 
 def map_track_duplication(tracks):
     album_track_duplicate_map = {}
     for track in tracks:
         albumNorm = track['album'].lower()
         titleNorm = track['title'].lower()
+        trackNumberNorm = track['trackNumber']
+        discNumberNorm = track['discNumber']
         if albumNorm not in album_track_duplicate_map:
             album_track_duplicate_map.update({albumNorm: {}})
-        if titleNorm in album_track_duplicate_map[albumNorm]:
-            album_track_duplicate_map[albumNorm][titleNorm] += 1
+        if titleNorm not in album_track_duplicate_map[albumNorm]:
+            album_track_duplicate_map[albumNorm].update({titleNorm: {}})
+        if trackNumberNorm not in album_track_duplicate_map[albumNorm][titleNorm]:
+            album_track_duplicate_map[albumNorm][titleNorm].update({trackNumberNorm: {}})
+        if discNumberNorm in album_track_duplicate_map[albumNorm][titleNorm][trackNumberNorm]:
+            album_track_duplicate_map[albumNorm][titleNorm][trackNumberNorm][discNumberNorm] += 1
         else:
-            album_track_duplicate_map[albumNorm][titleNorm] = 1
+            album_track_duplicate_map[albumNorm][titleNorm][trackNumberNorm][discNumberNorm] = 1
     return album_track_duplicate_map
 
 
@@ -29,21 +38,25 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
     duplicate_tracks = []
     for album_title in album_track_duplicate_map:
         for track_title in album_track_duplicate_map[album_title]:
-            duplicates = album_track_duplicate_map[album_title][track_title] - 1
-            if duplicates > 0:
-                for album in all_tracks_by_album:
-                    if album_title == album:
-                        for track in all_tracks_by_album[album]:
-                            albumNorm = track['album'].lower()
-                            titleNorm = track['title'].lower()
-                            if titleNorm == track_title and duplicates > 0:
-                                duplicate_tracks.append(track)
-                                print "Queueing for removal: '" + track['title'] + "' from album '" + track['album'] + "' by '" + track['artist']
-                                all_tracks.remove(track)
-                                duplicates += -1
+            for track_number in album_track_duplicate_map[album_title][track_title]:
+                for disc_number in album_track_duplicate_map[album_title][track_title][track_number]:
+                    duplicates = album_track_duplicate_map[album_title][track_title][track_number][disc_number] - 1 #As one is always added
+                    if duplicates > 0:
+                        for album in all_tracks_by_album:
+                            if album_title == album.lower():
+                                for track in all_tracks_by_album[album]:
+                                    titleNorm = track['title'].lower()
+                                    if titleNorm == track_title:
+                                        trackNumberNorm = track['trackNumber']
+                                        if trackNumberNorm == track_number:
+                                            discNumberNorm = track['discNumber']
+                                            if discNumberNorm == disc_number and duplicates > 0:
+                                                duplicate_tracks.append(track)
+                                                print("Queuing for removal: '" + track['title'] + "' from album '" + track['album'] + "' by '" + track['artist'])
+                                                all_tracks.remove(track)
+                                                duplicates -= 1
     return duplicate_tracks
 
-import sys
 
 def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
@@ -68,7 +81,7 @@ def query_yes_no(question, default="yes"):
 
     while True:
         sys.stdout.write(question + prompt)
-        choice = raw_input().lower()
+        choice = input().lower()
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
@@ -89,7 +102,7 @@ api = Mobileclient()
 logged_in = api.login('username', 'password', Mobileclient.FROM_MAC_ADDRESS)
 
 if logged_in:
-    print "Successfully logged in. Beginning duplicate detection process."
+    print("Successfully logged in. Beginning duplicate detection process.")
     all_tracks = api.get_all_songs()
     album_track_duplicate_map = map_track_duplication(all_tracks)
     all_tracks_by_album = sort_tracks_by_album(all_tracks)
@@ -100,7 +113,7 @@ if logged_in:
             deleted_track_ids = []
             for track in duplicate_track_ids:
                 deleted_track_ids += api.delete_songs(track)
-            print "Successfully deleted " + str(len(deleted_track_ids)) + " of " + str(len(duplicate_track_ids)) + " queued songs for removal."
+            print("Successfully deleted " + str(len(deleted_track_ids)) + " of " + str(len(duplicate_track_ids)) + " queued songs for removal.")
     else:
-        print "I didn't find any duplicate tracks."
-    print "Thank you!"
+        print("I didn't find any duplicate tracks.")
+    print("Thank you!")
