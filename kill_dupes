@@ -9,8 +9,14 @@ def map_track_duplication(tracks):
     for track in tracks:
         albumNorm = track['album'].lower()
         titleNorm = track['title'].lower()
-        trackNumberNorm = track['trackNumber']
-        discNumberNorm = track['discNumber']
+        try:
+            trackNumberNorm = track['trackNumber']
+        except:
+            trackNumberNorm = 0
+        try:
+            discNumberNorm = track['discNumber']
+        except:
+            discNumberNorm = 0
         if albumNorm not in album_track_duplicate_map:
             album_track_duplicate_map.update({albumNorm: {}})
         if titleNorm not in album_track_duplicate_map[albumNorm]:
@@ -81,7 +87,7 @@ def query_yes_no(question, default="yes"):
 
     while True:
         sys.stdout.write(question + prompt)
-        choice = input().lower()
+        choice = raw_input().lower()
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
