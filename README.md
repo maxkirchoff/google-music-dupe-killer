@@ -11,7 +11,7 @@ Thanks to [simon weber](https://github.com/simon-weber) for a GREAT client libra
 This is a incredibly simple script, but does require a few small configurations.
 
 ### Install [Unofficial Google Music Api](https://github.com/simon-weber/Unofficial-Google-Music-API)
-* For most environments with Python already installed:
+* For most environments with Python 3 already installed:
    
    ```$ pip install gmusicapi```
 * If you do not have pip or are running windows, please see [Unofficial Google Music API usage](http://unofficial-google-music-api.readthedocs.org/en/latest/usage.html)
