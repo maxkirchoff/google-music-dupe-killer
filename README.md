@@ -17,10 +17,24 @@ These are incredibly simple scripts, but do require a few small configurations.
 * If you do not have pip or are running windows, please see [Unofficial Google Music API usage](http://unofficial-google-music-api.readthedocs.org/en/latest/usage.html)
 
 ### Change login credentials
-* Near line 89, change the 'username' and 'password' to your Google account credentials.
+* Near line 12 in the script, change the 'username' and 'password' to your Google account credentials. 
+* Alternatively, create an empty file calleded 'credentials.py' in the script directory and set the username and password variables there.
+
+```python
+# credentials.py
+username = 'changeme@gmail.com'
+password = 'changeme'
+#android_id = 'deadbeefc0decafe'
+```
+
 * NOTE: Users with 2-step authentication enabled will have to create an App Specific Key/Password.
 Login into your Google account and head to https://security.google.com/settings/security/apppasswords, there you will be able to manually generate an App Specific password.
 After creating the Key/Password, just use it to login into this App, together with your usual Google username/email.
+
+* NOTE: If you see the error message "a valid MAC could not be determined."
+you are running into a [known issue](https://github.com/simon-weber/gmusicapi/issues/408) with the Google Music API.
+
+To workaround, set a new 16 digit hexadecimal number as your android_id on line 17 or in credentials.py.
 
 ### Run kill_dupes
 * The script will automatically detect and remove duplicates on any songs in your library.

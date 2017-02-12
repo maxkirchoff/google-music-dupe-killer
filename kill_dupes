@@ -3,6 +3,21 @@ import sys
 
 from gmusicapi import Mobileclient
 
+try:
+    import credentials
+    # credentials.py is in .gitignore and can be shared with other scripts
+    username = credentials.username
+    password = credentials.password
+except ImportError:
+    username = 'username'
+    password = 'password'
+
+try:
+    # optionally hardcode id to workaround https://github.com/simon-weber/gmusicapi/issues/408
+    android_id = credentials.android_id
+except (NameError, AttributeError):
+    android_id = Mobileclient.FROM_MAC_ADDRESS
+
 
 def map_track_duplication(tracks):
     album_track_duplicate_map = {}
@@ -109,7 +124,7 @@ def get_track_ids(tracks):
 
 
 api = Mobileclient()
-logged_in = api.login('username', 'password', Mobileclient.FROM_MAC_ADDRESS)
+logged_in = api.login(username, password, android_id)
 
 if logged_in:
     print("Successfully logged in. Beginning duplicate detection process.")
