@@ -1,17 +1,17 @@
 Google Music Dupe Killer
 ========================
 
-Really small script designed to remove pesky duplicates from Google Music.
+Really small scripts designed to remove pesky duplicates from Google Music.
 
 ** The duplicates must have all correct meta data as this evaluates their title and album for detection.
 
 Thanks to [simon weber](https://github.com/simon-weber) for a GREAT client library that made this super easy to code.
 
 ## Usage
-This is a incredibly simple script, but does require a few small configurations.
+These are incredibly simple scripts, but do require a few small configurations.
 
 ### Install [Unofficial Google Music Api](https://github.com/simon-weber/Unofficial-Google-Music-API)
-* For most environments with Python already installed:
+* For most environments with Python 3 already installed:
    
    ```$ pip install gmusicapi```
 * If you do not have pip or are running windows, please see [Unofficial Google Music API usage](http://unofficial-google-music-api.readthedocs.org/en/latest/usage.html)
@@ -24,6 +24,9 @@ After creating the Key/Password, just use it to login into this App, together wi
 
 ### Run kill_dupes
 * The script will automatically detect and remove duplicates on any songs in your library.
+
+### Run kill_playlist_dupes
+* This script works on one playlist at a time and removes the second through nth duplicate of a track in a playlist.
 
 
 Thanks!

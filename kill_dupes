@@ -55,7 +55,11 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
                                     if titleNorm == track_title:
                                         trackNumberNorm = track['trackNumber']
                                         if trackNumberNorm == track_number:
-                                            discNumberNorm = track['discNumber']
+                                            try:
+                                                discNumberNorm = track['discNumber']
+                                            except:
+                                                discNumberNorm = 0
+
                                             if discNumberNorm == disc_number and duplicates > 0:
                                                 duplicate_tracks.append(track)
                                                 print("Queuing for removal: '" + track['title'] + "' from album '" + track['album'] + "' by '" + track['artist'])
