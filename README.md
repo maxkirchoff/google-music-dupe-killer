@@ -18,7 +18,7 @@ These are incredibly simple scripts, but do require a few small configurations.
 
 ### Change login credentials
 * Near line 12 in the script, change the 'username' and 'password' to your Google account credentials. 
-* Alternatively, create an empty file calleded 'credentials.py' in the script directory and set the username and password variables there.
+* Alternatively, create an empty file called 'credentials.py' in the script directory and set the username and password variables there.
 
 ```python
 # credentials.py
@@ -33,7 +33,6 @@ After creating the Key/Password, just use it to login into this App, together wi
 
 * NOTE: If you see the error message "a valid MAC could not be determined."
 you are running into a [known issue](https://github.com/simon-weber/gmusicapi/issues/408) with the Google Music API.
-
 To workaround, set a new 16 digit hexadecimal number as your android_id on line 17 or in credentials.py.
 
 ### Run kill_dupes
