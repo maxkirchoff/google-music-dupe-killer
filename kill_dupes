@@ -68,7 +68,10 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
                                 for track in all_tracks_by_album[album]:
                                     titleNorm = track['title'].lower()
                                     if titleNorm == track_title:
-                                        trackNumberNorm = track['trackNumber']
+                                        try:
+                                            trackNumberNorm = track['trackNumber']
+                                        except:    
+                                            trackNumberNorm = 0
                                         if trackNumberNorm == track_number:
                                             try:
                                                 discNumberNorm = track['discNumber']
