@@ -80,7 +80,8 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
 
                                             if discNumberNorm == disc_number and duplicates > 0:
                                                 duplicate_tracks.append(track)
-                                                print("Queuing for removal: '" + track['title'] + "' from album '" + track['album'] + "' by '" + track['artist'])
+                                                #PR Encode output in utf-8 to avoid errors when printing special characters not supported by default codeset
+                                                print("Queuing for removal: '" + track['title'] + "' from album '" + track['album'] + "' by '" + track['artist']).encode('utf-8')
                                                 all_tracks.remove(track)
                                                 duplicates -= 1
     return duplicate_tracks
