@@ -37,7 +37,8 @@ def map_track_duplication(tracks):
         if titleNorm not in album_track_duplicate_map[albumNorm]:
             album_track_duplicate_map[albumNorm].update({titleNorm: {}})
         if trackNumberNorm not in album_track_duplicate_map[albumNorm][titleNorm]:
-            album_track_duplicate_map[albumNorm][titleNorm].update({trackNumberNorm: {}})
+            album_track_duplicate_map[albumNorm][titleNorm].update(
+                {trackNumberNorm: {}})
         if discNumberNorm in album_track_duplicate_map[albumNorm][titleNorm][trackNumberNorm]:
             album_track_duplicate_map[albumNorm][titleNorm][trackNumberNorm][discNumberNorm] += 1
         else:
@@ -61,7 +62,8 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
         for track_title in album_track_duplicate_map[album_title]:
             for track_number in album_track_duplicate_map[album_title][track_title]:
                 for disc_number in album_track_duplicate_map[album_title][track_title][track_number]:
-                    duplicates = album_track_duplicate_map[album_title][track_title][track_number][disc_number] - 1 #As one is always added
+                    # As one is always added
+                    duplicates = album_track_duplicate_map[album_title][track_title][track_number][disc_number] - 1
                     if duplicates > 0:
                         for album in all_tracks_by_album:
                             if album_title == album.lower():
@@ -70,7 +72,7 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
                                     if titleNorm == track_title:
                                         try:
                                             trackNumberNorm = track['trackNumber']
-                                        except:    
+                                        except:
                                             trackNumberNorm = 0
                                         if trackNumberNorm == track_number:
                                             try:
@@ -80,8 +82,17 @@ def get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map):
 
                                             if discNumberNorm == disc_number and duplicates > 0:
                                                 duplicate_tracks.append(track)
-                                                #PR Encode output in utf-8 to avoid errors when printing special characters not supported by default codeset
-                                                print(("Queuing for removal: '" + track['title'] + "' from album '" + track['album'] + "' by '" + track['artist']).encode('utf-8'))
+                                                # PR Encode output in utf-8 to avoid errors when printing special characters not supported by default codeset
+                                                print(
+                                                    (
+                                                        "Queuing for removal: '"
+                                                            + track.get('title', 'No Track Title')
+                                                            + "' from album '"
+                                                            + track.get('album', 'None')
+                                                            + "' by '"
+                                                            + track.get('artist', 'None')
+                                                    ).encode('utf8')
+                                                )
                                                 all_tracks.remove(track)
                                                 duplicates -= 1
     return duplicate_tracks
@@ -97,8 +108,8 @@ def query_yes_no(question, default="yes"):
 
     The "answer" return value is one of "yes" or "no".
     """
-    valid = {"yes":True,   "y":True,  "ye":True,
-             "no":False,     "n":False}
+    valid = {"yes": True,   "y": True,  "ye": True,
+             "no": False,     "n": False}
     if default == None:
         prompt = " [y/n] "
     elif default == "yes":
@@ -114,13 +125,13 @@ def query_yes_no(question, default="yes"):
             choice = raw_input().lower()
         else:
             choice = input().lower()
-            
+
         if default is not None and choice == '':
             return valid[default]
         elif choice in valid:
             return valid[choice]
         else:
-            sys.stdout.write("Please respond with 'yes' or 'no' "\
+            sys.stdout.write("Please respond with 'yes' or 'no' "
                              "(or 'y' or 'n').\n")
 
 
@@ -139,14 +150,16 @@ if logged_in:
     all_tracks = api.get_all_songs()
     album_track_duplicate_map = map_track_duplication(all_tracks)
     all_tracks_by_album = sort_tracks_by_album(all_tracks)
-    duplicate_tracks = get_duplicate_tracks(all_tracks_by_album, album_track_duplicate_map)
+    duplicate_tracks = get_duplicate_tracks(
+        all_tracks_by_album, album_track_duplicate_map)
     duplicate_track_ids = get_track_ids(duplicate_tracks)
     if len(duplicate_track_ids) > 0:
         if query_yes_no("Found " + str(len(duplicate_track_ids)) + " duplicate tracks. Delete duplicates?", "no"):
             deleted_track_ids = []
             for track in duplicate_track_ids:
                 deleted_track_ids += api.delete_songs(track)
-            print("Successfully deleted " + str(len(deleted_track_ids)) + " of " + str(len(duplicate_track_ids)) + " queued songs for removal.")
+            print("Successfully deleted " + str(len(deleted_track_ids)) + " of " +
+                  str(len(duplicate_track_ids)) + " queued songs for removal.")
     else:
         print("I didn't find any duplicate tracks.")
     print("Thank you!")
