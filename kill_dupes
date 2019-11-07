@@ -143,7 +143,9 @@ def get_track_ids(tracks):
 
 
 api = Mobileclient()
-logged_in = api.login(username, password, android_id)
+api.__init__(True, True, True)
+oauth_credentials = api.perform_oauth(username, password)
+logged_in = api.oauth_login(api.FROM_MAC_ADDRESS, oauth_credentials)
 
 if logged_in:
     print("Successfully logged in. Beginning duplicate detection process.")
